@@ -1,7 +1,7 @@
 'use client';
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from 'next/navigation';
-import { fetchNoteById } from "@/lib/api/clientApi";
+import { getServerSingleNote } from "@/lib/api/serverApi";
 import css from './page.module.css'
 
 
@@ -10,7 +10,7 @@ export default function NoteDetailsClient() {
     const { id } = useParams<{ id: string }>();
     const { data, isLoading, error } = useQuery({
         queryKey: ['notes', id],
-        queryFn: () => fetchNoteById(id),
+        queryFn: () => getServerSingleNote(id),
         refetchOnMount: false,
     });
     if (isLoading) return <p>Loading, please wait...</p>;
@@ -22,7 +22,7 @@ export default function NoteDetailsClient() {
 	  <div className={css.header}>
 	    <h2>{data.title}</h2>
 	  </div>
-      <p className={css.tag}>{data.category.name}</p>
+      <p className={css.tag}>{data.tag}</p>
 	  <p className={css.content}>{data.content}</p>
 	  <p className={css.date}>{data.createdAt}</p>
 	</div>

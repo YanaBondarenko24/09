@@ -1,9 +1,9 @@
 import css from './EditProfilePage.module.css'
 import Image from 'next/image'
-import { getMe } from '@/lib/api/serverApi';
+import { getServerMe } from '@/lib/api/serverApi';
 
 export default async function EditProfile() {
-  const user = await getMe();
+  const user = await getServerMe();
     return (
         <main className={css.mainContent}>
   <div className={css.profileCard}>

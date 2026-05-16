@@ -20,33 +20,24 @@ type Props = {
 };
 
 
-export async function generateMetadata({ searchParams, params }: Props):Promise<Metadata>{
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const { query, page } = searchParams;
-    const tag = slug[0];
-  const rawTag = tag === "all" ? undefined : (tag as NoteTag | undefined);
-  const notes = await fetchNotes(query, page, rawTag);
-  const titleTag = rawTag ?? "All";
-  const urlTag = rawTag ?? "all";
-
-
+  const currentTag = slug[0];
   return {
-
-   
-    title: `${titleTag} notes`,
-    description: `Browse ${titleTag} notes with organized tasks, reminders, and important information.You have ${notes.notes.length} notes.`,
+    title: `Category: ${currentTag === "all" ? "All Notes" : currentTag}`,
+    description: `Notes in the ${currentTag === "all" ? "all categories" : currentTag} category`,
     openGraph: {
-     title: `${titleTag} notes.`,
-    description: `Browse ${titleTag} notes with organized tasks, reminders, and important information.You have ${notes.notes.length} notes.`,
-    url: `https://08-zustand-beta-nine.vercel.app/notes/filter/${urlTag}`,
-        images: [{
-        url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
-        width: 1200,
-        height: 630,
-        alt: "NoteHub"
-    }]
-    }
-  }
+      title: `Category: ${currentTag === "all" ? "All Notes" : currentTag}`,
+      description: `Notes in the ${currentTag === "all" ? "all categories" : currentTag} category`,
+      images: [
+        {
+          url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
+  };
 }
 export default async function Notes({
   searchParams,params }:Props) {

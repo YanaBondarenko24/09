@@ -1,15 +1,9 @@
-import  { AxiosError } from "axios";
-import { NextResponse } from "next/server";
+export function logErrorResponse(errorObj: unknown): void {
+  const green = '\x1b[32m';
+  const yellow = '\x1b[33m';
+  const reset = '\x1b[0m';
 
 
-export type ApiError = AxiosError<{ error: string }>;
-
-
-export const logErrorResponse = (error: ApiError) => {
-  return NextResponse.json(
-    {
-      error: error.response?.data?.error ?? error.message,
-    },
-    { status: error.status },
-  );
-};
+  console.log(`${green}> ${yellow}Error Response Data:${reset}`);
+  console.dir(errorObj, { depth: null, colors: true });
+}

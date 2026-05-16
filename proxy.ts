@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { parse } from 'cookie';
-import { getSession  } from './lib/api/serverApi';
+import { checkServerSession  } from './lib/api/serverApi';
 
-const privateRoutes = ['/profile','/notes'];
+const privateRoutes = ['/profile'/* ,'/notes' */];
 const publicRoutes = ['/sign-in', '/sign-up'];
 
 export async function proxy(request: NextRequest) {
@@ -17,7 +17,7 @@ export async function proxy(request: NextRequest) {
 
   if (!accessToken) {
     if (refreshToken) {
-      const data = await getSession();
+      const data = await checkServerSession();
       const setCookie = data.headers['set-cookie'];
 
       if (setCookie) {
@@ -65,5 +65,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/profile/:path*','/notes/:path*', '/sign-in', '/sign-up'],
+  matcher: ['/profile/:path*',/* '/notes/:path*', */ '/sign-in', '/sign-up'],
 };

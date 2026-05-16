@@ -1,23 +1,23 @@
 'use client';
-import css from './SignUpPage.module.css';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { register, RegisterRequest } from '@/lib/api/clientApi';
-import { ApiError } from '@/app/api/_utils/utils'
 
+import { register, RegisterRequest } from '@/lib/api/clientApi';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { ApiError } from '@/app/api/api';
 import { useAuthStore } from '@/lib/store/authStore';
 
 export default function SingUp() {
-const router = useRouter();
+  const router = useRouter();
   const [error, setError] = useState('');
-   const setUser = useAuthStore((state) => state.setUser);
+  const setUser = useAuthStore((state) => state.setUser);
 
   const handleSubmit = async (formData: FormData) => {
     try {
       const formValues = Object.fromEntries(formData) as RegisterRequest;
-      const res = await register(formValues);
-      if (res) {
-        setUser(res);
+      const user = await register(formValues);
+
+      if (user) {
+        setUser(user);
         router.push('/profile');
       } else {
         setError('Invalid email or password');
@@ -26,8 +26,8 @@ const router = useRouter();
       setError(
         (error as ApiError).response?.data?.error ??
           (error as ApiError).message ??
-          'Oops... some error'
-      )
+          'Oops... some error',
+      );
     }
   };
 
@@ -37,7 +37,7 @@ const router = useRouter();
       <form action={handleSubmit}>
         <label>
           Username
-          <input type="text" name="userName" required />
+          <input type="text" name="username" required />
         </label>
         <label>
           Email
@@ -52,5 +52,4 @@ const router = useRouter();
       {error && <p>{error}</p>}
     </>
   );
-};
-
+}

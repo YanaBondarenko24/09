@@ -1,14 +1,10 @@
 
 import type { Note, NoteTag } from '../../types/note';
 import  {NoteFormValues} from '../../components/NoteForm/NoteForm';
-import axios from 'axios';
 import { User } from '@/types/user';
+import { nextServer } from './api';
 
-export const nextServer = axios.create({
-  baseURL: "http://localhost:3000/api",
-  withCredentials: true,
-});
-/* export const myKey = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN; */
+
 
 
 export interface FetchNotesParams {
@@ -58,14 +54,11 @@ export async function deleteNote(id:string) {
 return res.data  
 }
 
-
 export type RegisterRequest = {
   email: string;
   password: string;
-  userName: string;
+  username?: string;
 };
-
-
 
 export const register = async (data: RegisterRequest) => {
   const res = await nextServer.post<User>('/auth/register', data);
