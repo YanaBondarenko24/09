@@ -1,9 +1,9 @@
 'use client';
 import { useDebouncedCallback } from "use-debounce";
 import { useEffect, useState } from 'react';
-import { fetchNotes } from '@/lib/api';
+import { fetchNotes } from '@/lib/api/clientApi';
 import SearchBox from '@/components/SearchBox/SearchBox';
-import css from '@/app/notes/page.module.css'
+import css from '@/app/(privat routes)/notes/page.module.css'
 import { keepPreviousData, useQuery} from '@tanstack/react-query'
 import NoteList from '@/components/NoteList/NoteList';
 import type { NoteTag } from '@/types/note';

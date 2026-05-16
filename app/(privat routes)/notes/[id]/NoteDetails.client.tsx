@@ -1,7 +1,7 @@
 'use client';
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from 'next/navigation';
-import { fetchNoteById } from "@/lib/api";
+import { fetchNoteById } from "@/lib/api/clientApi";
 import css from './page.module.css'
 
 
@@ -22,7 +22,7 @@ export default function NoteDetailsClient() {
 	  <div className={css.header}>
 	    <h2>{data.title}</h2>
 	  </div>
-      <p className={css.tag}>{data.tag}</p>
+      <p className={css.tag}>{data.category.name}</p>
 	  <p className={css.content}>{data.content}</p>
 	  <p className={css.date}>{data.createdAt}</p>
 	</div>

@@ -3,7 +3,7 @@ import css from './NoteForm.module.css'
 import { useId } from 'react';
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from 'react-hot-toast';
-import { createNote } from '@/lib/api';
+import { createNote } from '@/lib/api/clientApi';
 import { useRouter } from 'next/navigation'; 
 import type { NoteTag } from '@/types/note';
 import { useNoteDraftStore } from '@/lib/store/noteStore';
@@ -52,7 +52,6 @@ export default function NoteForm() {
     
     const errorsValid: Record<string, string> = {};
 
-  
     if ((data.title.trim().length <= 2)||(data.title === '')) {
       errorsValid.title = 'Enter you title!';
     }
@@ -96,11 +95,10 @@ try {
              />
               {errors.content && (<p className={css.error}>{errors.content}</p>)}
             </div>
-
             <div className={css.formGroup}>
-              <label htmlFor={`${fieldId}-tag`}>Tag</label>
-              <select value ={draft.tag} onChange={handleChange} id={`${fieldId}-tag`} name="tag" className={css.select}>
-                <option value="Todo">Todo</option>
+              <label htmlFor={`${fieldId}-categoryId`}>Tag</label>
+              <select value ={draft.tag} onChange={handleChange} id={`${fieldId}-categoryId`} name="categoryId" className={css.select}>
+               <option value="Todo">Todo</option>
                 <option value="Work">Work</option>
                 <option value="Personal">Personal</option>
                 <option value="Meeting">Meeting</option>
