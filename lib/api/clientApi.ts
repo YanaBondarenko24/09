@@ -5,7 +5,10 @@ import { User } from '@/types/user';
 import { nextServer } from './api';
 
 
-
+export interface LoginData {
+  email: string;
+  password: string;
+}
 
 export interface FetchNotesParams {
   page?: number;
@@ -20,11 +23,11 @@ export interface FetchNotesParams {
 }
 
 export async function fetchNotes(query:string, page:number,tag?:NoteTag ) {
-    const res = await nextServer.get<FetchNotesProps>('/notes', {
+    const res = await nextServer.get<FetchNotesParams>('/notes', {
         params: {
             search: query,
             page,
-            ...(tag ? { tag } : {})  
+            tag, 
         }
     })
     console.log(res.data);
@@ -41,8 +44,8 @@ export async function fetchNoteById (id:string) {
 
 export async function createNote(note:NoteFormValues) {
     const res = await nextServer.post<Note>('/notes', note)
-    
     console.log(res.data);
+    
     return res.data;
 }
 
@@ -57,7 +60,7 @@ return res.data
 export type RegisterRequest = {
   email: string;
   password: string;
-  username?: string;
+  username: string;
 };
 
 export const register = async (data: RegisterRequest) => {
@@ -91,3 +94,7 @@ export const logout = async (): Promise<void> => {
   await nextServer.post('/auth/logout')
 };
 
+export const updateMe = async (userData: Partial<User>): Promise<User> => {
+  const res = await nextServer.patch<User>("/users/me", userData);
+  return res.data;
+};

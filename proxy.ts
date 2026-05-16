@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/server';
+import { checkServerSession } from './lib/api/serverApi';
 import { parse } from 'cookie';
-import { checkServerSession  } from './lib/api/serverApi';
 
-const privateRoutes = ['/profile'/* ,'/notes' */];
-const publicRoutes = ['/sign-in', '/sign-up'];
+const privateRoutes = ['/profile', '/notes'];
+const publicRoutes = ['/sing-in', '/sing-up'];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -17,6 +17,7 @@ export async function proxy(request: NextRequest) {
 
   if (!accessToken) {
     if (refreshToken) {
+   
       const data = await checkServerSession();
       const setCookie = data.headers['set-cookie'];
 
@@ -32,6 +33,7 @@ export async function proxy(request: NextRequest) {
           if (parsed.accessToken) cookieStore.set('accessToken', parsed.accessToken, options);
           if (parsed.refreshToken) cookieStore.set('refreshToken', parsed.refreshToken, options);
         }
+     
         if (isPublicRoute) {
           return NextResponse.redirect(new URL('/', request.url), {
             headers: {
@@ -39,6 +41,7 @@ export async function proxy(request: NextRequest) {
             },
           });
         }
+        
         if (isPrivateRoute) {
           return NextResponse.next({
             headers: {
@@ -48,22 +51,27 @@ export async function proxy(request: NextRequest) {
         }
       }
     }
-
+    
     if (isPublicRoute) {
       return NextResponse.next();
     }
+
+    
     if (isPrivateRoute) {
       return NextResponse.redirect(new URL('/sign-in', request.url));
     }
   }
+
   if (isPublicRoute) {
     return NextResponse.redirect(new URL('/', request.url));
   }
+
+ 
   if (isPrivateRoute) {
     return NextResponse.next();
   }
 }
 
 export const config = {
-  matcher: ['/profile/:path*',/* '/notes/:path*', */ '/sign-in', '/sign-up'],
+  matcher: ['/profile', '/notes/:path*', '/sing-in', '/sing-up'],
 };

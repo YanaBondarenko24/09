@@ -22,7 +22,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const currentTag = slug[0];
+  const currentTag  = slug[0] === "all" ? "all" : slug[0];
   return {
     title: `Category: ${currentTag === "all" ? "All Notes" : currentTag}`,
     description: `Notes in the ${currentTag === "all" ? "all categories" : currentTag} category`,

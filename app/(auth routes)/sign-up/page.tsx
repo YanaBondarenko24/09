@@ -1,55 +1,85 @@
-'use client';
+"use client";
 
-import { register, RegisterRequest } from '@/lib/api/clientApi';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { ApiError } from '@/app/api/api';
-import { useAuthStore } from '@/lib/store/authStore';
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { register, LoginData } from "@/lib/api/clientApi";
+import { useAuthStore } from "@/lib/store/authStore";
+import { User } from "@/types/user";
+import css from "./SignUpPage.module.css";
 
-export default function SingUp() {
+export default function SignUp() {
   const router = useRouter();
-  const [error, setError] = useState('');
+
   const setUser = useAuthStore((state) => state.setUser);
 
-  const handleSubmit = async (formData: FormData) => {
-    try {
-      const formValues = Object.fromEntries(formData) as RegisterRequest;
-      const user = await register(formValues);
+  const mutation = useMutation<
+    User,
+    AxiosError<{ message: string }>,
+    LoginData
+  >({
+    mutationFn: (data) => register(data),
+    onSuccess: (user) => {
+      setUser(user);
+      router.push("/profile");
+    },
+  });
 
-      if (user) {
-        setUser(user);
-        router.push('/profile');
-      } else {
-        setError('Invalid email or password');
-      }
-    } catch (error) {
-      setError(
-        (error as ApiError).response?.data?.error ??
-          (error as ApiError).message ??
-          'Oops... some error',
-      );
-    }
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    const data: LoginData = {
+      email: formData.get("email") as string,
+      password: formData.get("password") as string,
+    };
+
+    mutation.mutate(data);
   };
 
   return (
-    <>
-      <h1>Sign up</h1>
-      <form action={handleSubmit}>
-        <label>
-          Username
-          <input type="text" name="username" required />
-        </label>
-        <label>
-          Email
-          <input type="email" name="email" required />
-        </label>
-        <label>
-          Password
-          <input type="password" name="password" required />
-        </label>
-        <button type="submit">Register</button>
+    <main className={css.mainContent}>
+      <h1 className={css.formTitle}>Sign up</h1>
+      <form className={css.form} onSubmit={handleSubmit}>
+        <div className={css.formGroup}>
+          <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            className={css.input}
+            required
+          />
+        </div>
+
+        <div className={css.formGroup}>
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            className={css.input}
+            required
+          />
+        </div>
+
+        <div className={css.actions}>
+          <button
+            type="submit"
+            className={css.submitButton}
+            disabled={mutation.isPending}
+          >
+            {mutation.isPending ? "Registering..." : "Register"}
+          </button>
+        </div>
+
+        {mutation.isError && (
+          <p className={css.error}>
+            {mutation.error.response?.data?.message ||
+              "Registration failed. Please try again."}
+          </p>
+        )}
       </form>
-      {error && <p>{error}</p>}
-    </>
+    </main>
   );
 }
