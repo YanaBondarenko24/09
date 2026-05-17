@@ -29,7 +29,6 @@ export async function fetchNotes(query:string, page:number,tag?:NoteTag ) {
             tag, 
         }
     })
-    console.log(res.data);
     return res.data;
 }
 
@@ -92,6 +91,7 @@ export const getMe = async () => {
 };
 export const logout = async (): Promise<void> => {
   await nextServer.post('/auth/logout')
+  return;
 };
 
 export const updateMe = async (userData: UpdateUserRequest): Promise<User> => {
