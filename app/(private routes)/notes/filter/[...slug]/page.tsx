@@ -14,7 +14,7 @@ import { Metadata } from 'next';
 type Props = {
   searchParams:{
     query: string,
-    page: number,
+    page: string,
   };
   params: Promise<{ slug: string[] }>;
 };
@@ -46,7 +46,7 @@ export default async function Notes({
   const tag = rawTag === "all" ? undefined : (rawTag as NoteTag | undefined);
   
   const queryClient = new QueryClient();
-  const search = await searchParams;
+  const search =  searchParams;
   const page = Number(search.page ?? 1);
   const query = String(search.query ?? '')
   await queryClient.prefetchQuery({

@@ -22,6 +22,10 @@ export interface FetchNotesParams {
     totalPages: number;
 }
 
+export type UpdateUserRequest = {
+  username?: string;
+  avatar?: string;
+};
 export async function fetchNotes(query:string, page:number,tag?:NoteTag ) {
     const res = await nextServer.get<FetchNotesProps>('/notes', {
         params: {
@@ -95,7 +99,7 @@ export const logout = async (): Promise<void> => {
   await nextServer.post('/auth/logout')
 };
 
-export const updateMe = async (userData: Partial<User>): Promise<User> => {
+export const updateMe = async (userData: UpdateUserRequest): Promise<User> => {
   const res = await nextServer.patch<User>("/users/me", userData);
   return res.data;
 };
