@@ -23,7 +23,7 @@ export interface FetchNotesParams {
 }
 
 export async function fetchNotes(query:string, page:number,tag?:NoteTag ) {
-    const res = await nextServer.get<FetchNotesParams>('/notes', {
+    const res = await nextServer.get<FetchNotesProps>('/notes', {
         params: {
             search: query,
             page,
@@ -60,7 +60,7 @@ return res.data
 export type RegisterRequest = {
   email: string;
   password: string;
-  username: string;
+  username?: string;
 };
 
 export const register = async (data: RegisterRequest) => {

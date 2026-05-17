@@ -8,6 +8,7 @@ import { useAuthStore } from "@/lib/store/authStore";
 import { User } from "@/types/user";
 import css from "./SignUpPage.module.css";
 
+
 export default function SignUp() {
   const router = useRouter();
 
